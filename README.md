@@ -74,6 +74,14 @@ For more information on Langfuse's architecture, please check [the official docu
 - `is_spot_instance` - Use spot instances for workers (Default: false)
 - `worker_desire_count` - Number of worker instances (Default: 1)
 
+## Push Docker Images to ECR
+After running terraform apply, you need to push the required Docker images to the created ECR repositories.
+
+- [Langfuse web](https://github.com/langfuse/langfuse/pkgs/container/langfuse)
+- [Langfuse worker](https://github.com/langfuse/langfuse/pkgs/container/langfuse-worker)
+- [Clickhouse](https://hub.docker.com/_/clickhouse)
+- [Grafana](https://hub.docker.com/r/grafana/grafana)
+
 ## Examples
 
 Complete deployment examples are available in the `examples` directory.
