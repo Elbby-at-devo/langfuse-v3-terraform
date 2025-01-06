@@ -19,7 +19,7 @@ resource "aws_secretsmanager_secret" "langfuse_database_url" {
 
 resource "aws_secretsmanager_secret_version" "langfuse_database_url" {
   secret_id     = aws_secretsmanager_secret.langfuse_database_url.arn
-  secret_string = "postgresql://root:${aws_secretsmanager_secret_version.langfuse_db_password.secret_string}@${aws_rds_cluster.langfuse_aurora_cluster.endpoint}:5432/langfuse"
+  secret_string = "postgresql://${var.database_user}:${aws_secretsmanager_secret_version.langfuse_db_password.secret_string}@${aws_rds_cluster.langfuse_aurora_cluster.endpoint}:5432/langfuse"
 }
 
 
