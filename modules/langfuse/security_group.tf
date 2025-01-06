@@ -53,8 +53,8 @@ resource "aws_security_group" "langfuse_cache" {
   }
 
   ingress {
-    from_port       = 6379
-    to_port         = 6379
+    from_port       = 0
+    to_port         = 0
     protocol        = "-1"
     security_groups = [aws_security_group.apprunner_vpc_connector.id, aws_security_group.langfuse_db.id, aws_security_group.langfuse_worker.id]
     description     = "Ingress Allow all traffic from app and flower security groups"

@@ -91,3 +91,9 @@ variable "database_min_capacity" {
   type        = number
   default     = 0.5
 }
+
+variable "force_delete" {
+  description = "Whether to force delete resources"
+  type        = bool
+  default     = false
+}

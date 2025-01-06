@@ -13,12 +13,12 @@ resource "aws_rds_cluster" "langfuse_aurora_cluster" {
   engine_version      = "15.6"
   engine_mode         = "provisioned"
   availability_zones  = var.availability_zones
-  database_name       = "langfuse_db"
+  database_name       = "langfuse"
   master_username     = var.database_user
   master_password     = aws_secretsmanager_secret_version.langfuse_db_password.secret_string
   storage_encrypted   = true
   kms_key_id          = aws_kms_key.postgres.arn
-  deletion_protection = true
+  deletion_protection = !var.force_delete
 
   backup_retention_period         = 5
   preferred_backup_window         = "07:00-09:00"
