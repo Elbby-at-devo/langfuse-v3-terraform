@@ -151,3 +151,38 @@ resource "aws_apprunner_custom_domain_association" "grafana" {
   domain_name = "grafana.${var.custom_domain_name}"
   service_arn = aws_apprunner_service.grafana.arn
 }
+
+data "aws_route53_zone" "custom_domain" {
+  name = "${var.custom_domain_name}."
+}
+
+resource "aws_route53_record" "certificate_validation_grafana" {
+  for_each = {
+    for record in aws_apprunner_custom_domain_association.grafana.certificate_validation_records : record.name => {
+      name   = record.name
+      record = record.value
+    }
+  }
+
+  zone_id = data.aws_route53_zone.custom_domain.zone_id
+  name    = each.value.name
+  type    = "CNAME"
+  ttl     = "300"
+  records = [each.value.record]
+}
+
+resource "aws_route53_record" "certificate_validation_langfuse" {
+  for_each = {
+    for record in aws_apprunner_custom_domain_association.langfuse.certificate_validation_records : record.name => {
+      name   = record.name
+      record = record.value
+    }
+  }
+
+  zone_id = data.aws_route53_zone.custom_domain.zone_id
+  name    = each.value.name
+  type    = "CNAME"
+  ttl     = "300"
+  records = [each.value.record]
+}
+  
