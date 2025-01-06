@@ -5,7 +5,7 @@ resource "random_password" "langfuse_db_password" {
 }
 
 resource "aws_secretsmanager_secret" "langfuse_db_password" {
-  name = "langfuse_database_password"
+  name_prefix = "langfuse_database_password"
 }
 
 resource "aws_secretsmanager_secret_version" "langfuse_db_password" {
@@ -14,7 +14,7 @@ resource "aws_secretsmanager_secret_version" "langfuse_db_password" {
 }
 
 resource "aws_secretsmanager_secret" "langfuse_database_url" {
-  name = "langfuse_database_url"
+  name_prefix = "langfuse_database_url"
 }
 
 resource "aws_secretsmanager_secret_version" "langfuse_database_url" {
@@ -30,7 +30,7 @@ resource "random_password" "clickhouse_password" {
 }
 
 resource "aws_secretsmanager_secret" "clickhouse_password" {
-  name = "clickhouse_password"
+  name_prefix = "clickhouse_password"
 }
 
 resource "aws_secretsmanager_secret_version" "clickhouse_password" {
@@ -45,7 +45,7 @@ resource "random_password" "grafana_admin_password" {
 }
 
 resource "aws_secretsmanager_secret" "grafana_admin_password" {
-  name = "grafana_admin_password"
+  name_prefix = "grafana_admin_password"
 }
 
 resource "aws_secretsmanager_secret_version" "grafana_admin_password" {
