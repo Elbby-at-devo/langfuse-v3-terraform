@@ -20,7 +20,7 @@ resource "aws_apprunner_service" "langfuse_web" {
           NEXTAUTH_URL                                  = "https://langfuse.${var.custom_domain_name}"
           NEXTAUTH_SECRET                               = var.web_next_secret
           SALT                                          = var.web_salt
-          ENCRIPTION_KEY                                = var.encryption_key
+          ENCRYPTION_KEY                                = var.encryption_key
           HOSTNAME                                      = "0.0.0.0"
           S3_BUCKET_NAME                                = aws_s3_bucket.langfuse_blob.id
           LANGFUSE_S3_MEDIA_UPLOAD_ENABLED              = "true"
