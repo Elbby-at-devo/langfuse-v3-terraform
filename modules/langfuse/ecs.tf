@@ -55,6 +55,11 @@ resource "aws_ecs_task_definition" "clickhouse" {
     }
   }
 
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture = "ARM64"
+  }
+
   container_definitions = jsonencode([
     {
       name      = "clickhouse"
@@ -98,6 +103,14 @@ resource "aws_ecs_task_definition" "clickhouse" {
         {
           name  = "CLICKHOUSE_PASSWORD"
           value = random_password.clickhouse_password.result
+        },
+        {
+          name = "AWS_REGION"
+          value = var.region
+        },
+        {
+          name = "S3_BUCKET"
+          value = aws_s3_bucket.langfuse_clickhouse.id
         }
       ]
 
@@ -138,6 +151,11 @@ resource "aws_ecs_task_definition" "langfuse_worker" {
 
   execution_role_arn = aws_iam_role.langfuse_ecs_task_execute_role.arn
   task_role_arn      = aws_iam_role.langfuse_task_role.arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture = "ARM64"
+  }
 
   container_definitions = jsonencode([
     {
