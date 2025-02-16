@@ -77,10 +77,50 @@ For more information on Langfuse's architecture, please check [the official docu
 ## Push Docker Images to ECR
 After running terraform apply, you need to push the required Docker images to the created ECR repositories.
 
-- [Langfuse web](https://github.com/langfuse/langfuse/pkgs/container/langfuse)
-- [Langfuse worker](https://github.com/langfuse/langfuse/pkgs/container/langfuse-worker)
-- [Clickhouse](https://hub.docker.com/_/clickhouse)
-- [Grafana](https://hub.docker.com/r/grafana/grafana)
+### [Langfuse web](https://github.com/langfuse/langfuse/pkgs/container/langfuse)
+
+App Runner requires a x_86-64 image, so you need to pull x_86_64 image and push the image to ECR.
+
+```bash
+docker pull langfuse/langfuse:3
+docker tag langfuse/langfuse:3 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/langfuse
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/langfuse
+```
+
+### [Langfuse worker](https://github.com/langfuse/langfuse/pkgs/container/langfuse-worker)
+Langfuse worker, use ECS Fargate, you can choose ARM64 image.
+
+So you need to pull ARM64 image and push the image to ECR. (Cost-effective)
+
+```bash
+docker pull --platform linux/arm64 langfuse/langfuse-worker:3
+docker tag langfuse/langfuse-worker:3 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/langfuse-worker
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/langfuse-worker
+```
+
+### [Clickhouse](https://hub.docker.com/_/clickhouse)
+
+Clickhouse, use ECS Fargate, you can choose ARM64 image.
+
+```bash
+docker pull clickhouse/clickhouse-server:24
+docker tag clickhouse/clickhouse-server:24 ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/clickhouse
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/clickhouse
+```
+
+#### Optional: Use Clickhouse with S3 Disk
+
+If you want to use Clickhouse with S3 Disk, you need to use a [custom Clickhouse image](https://github.com/tubone24/clickhouse-server-s3disk) with S3 support. (Cost-effective)
+
+```bash
+docker pull ghcr.io/tubone24/clickhouse-server-s3disk
+docker tag ghcr.io/tubone24/clickhouse-server-s3disk ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/clickhouse
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/clickhouse
+```
+
+### [Grafana](https://hub.docker.com/r/grafana/grafana)
+
+TBD(Configurable)
 
 ## Examples
 
