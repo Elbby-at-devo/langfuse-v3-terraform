@@ -156,33 +156,45 @@ data "aws_route53_zone" "custom_domain" {
   name = "${var.custom_domain_name}."
 }
 
-resource "aws_route53_record" "certificate_validation_grafana" {
-  for_each = {
-    for record in aws_apprunner_custom_domain_association.grafana.certificate_validation_records : record.name => {
-      name   = record.name
-      record = record.value
-    }
-  }
+# Note: Certificate validation records for App Runner custom domains need to be created
+# after the initial apply. The validation records are not known until the custom domain
+# association is created. You have two options:
+#
+# Option 1: Run terraform apply with -target flag:
+#   terraform apply -target=module.langfuse.aws_apprunner_custom_domain_association.grafana
+#   terraform apply -target=module.langfuse.aws_apprunner_custom_domain_association.langfuse
+#   Then run terraform apply again to create the validation records
+#
+# Option 2: Manually create the validation records after the initial apply
 
-  zone_id = data.aws_route53_zone.custom_domain.zone_id
-  name    = each.value.name
-  type    = "CNAME"
-  ttl     = "300"
-  records = [each.value.record]
-}
+# Uncomment the following blocks after the initial apply when certificate_validation_records are known
+# resource "aws_route53_record" "certificate_validation_grafana" {
+#   for_each = {
+#     for record in aws_apprunner_custom_domain_association.grafana.certificate_validation_records : record.name => {
+#       name   = record.name
+#       record = record.value
+#     }
+#   }
+#
+#   zone_id = data.aws_route53_zone.custom_domain.zone_id
+#   name    = each.value.name
+#   type    = "CNAME"
+#   ttl     = "300"
+#   records = [each.value.record]
+# }
 
-resource "aws_route53_record" "certificate_validation_langfuse" {
-  for_each = {
-    for record in aws_apprunner_custom_domain_association.langfuse.certificate_validation_records : record.name => {
-      name   = record.name
-      record = record.value
-    }
-  }
-
-  zone_id = data.aws_route53_zone.custom_domain.zone_id
-  name    = each.value.name
-  type    = "CNAME"
-  ttl     = "300"
-  records = [each.value.record]
-}
+# resource "aws_route53_record" "certificate_validation_langfuse" {
+#   for_each = {
+#     for record in aws_apprunner_custom_domain_association.langfuse.certificate_validation_records : record.name => {
+#       name   = record.name
+#       record = record.value
+#     }
+#   }
+#
+#   zone_id = data.aws_route53_zone.custom_domain.zone_id
+#   name    = each.value.name
+#   type    = "CNAME"
+#   ttl     = "300"
+#   records = [each.value.record]
+# }
   
